@@ -11,10 +11,19 @@
 <div class="container form-center">
     <div class="row">
         <div class="col-4 offset-4">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form method="post" action="{{ url('setCity') }}">
                 @csrf
                 <div class="form-group">
-                    <input class="style-cities" name="cities" placeholder="Название города" required>
+                    <input class="style-cities" name="name" placeholder="Название города" required>
                     <button type="submit" class="button button1">Добавить</button>
                 </div>
             </form>

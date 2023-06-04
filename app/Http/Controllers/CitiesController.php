@@ -4,18 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class CitiesController
 {
-    function getCities() {
+    /**
+     * Возвращает города
+     */
+    function getCities()
+    {
         $cities = DB::table('cities')->get();
-        return view('cities')->with('cities',$cities);
+        return view('cities')->with('cities', $cities);
     }
-    public function setCity(Request $request) {
-        $name = $request->input('cities');
-        DB::table('cities')->insert([
-            'name' => $name
+
+    /**
+     * Создание города
+     * @param Request $request
+     */
+    public function setCity(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => ['required', 'max:250', 'regex:/^[-A-Za-z\p{Cyrillic}\s]+$/u']
         ]);
-        return $this->getCities();
+        DB::table('cities')->insert([
+            'name' => $validatedData['name']
+        ]);
+        return redirect()->action(
+            [CitiesController::class, 'getCities']
+        );
     }
 }
